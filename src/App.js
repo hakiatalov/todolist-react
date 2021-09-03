@@ -38,9 +38,33 @@ function ToDoList({ todos, setTodos }) {
         style={{
           textDecoration: todo.done ? "line-through" : ""
         }}
-        key={todo.id}>{todo.text}</li>
+        key={todo.id}>{todo.text}
+        <DeleteTodo todo={todo} setTodos={setTodos} />
+        </li>
       ))}
     </ul>
+  )
+}
+
+function DeleteTodo({ todo, setTodos }) {
+  
+  function handleDeleteTodo() {
+    const confirmed = window.confirm("Do you want to delete this?");
+    if (confirmed) {
+      setTodos(prevTodos => {
+        return prevTodos.filter(t => t.id !== todo.id);
+      });
+    }
+  }
+
+  return (
+    <span 
+    onClick={handleDeleteTodo}
+    role="button" style={{
+      color: "red",
+      fontWeight: "bold",
+      marginLeft: 10,
+    }}>x</span>
   )
 }
 
