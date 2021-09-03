@@ -13,24 +13,40 @@ function App() {
     <div className="App">
       <h1>ToDo List</h1>
 
-      <ToDoList todos={todos}/>
+      <ToDoList todos={todos} setTodos={setTodos}/>
       <AddToDo setTodos={setTodos}/>
     </div>
   );
 }
 
-function ToDoList({todos}) {
+function ToDoList({ todos, setTodos }) {
 
+  function handleToggleTodo(todo) {
+
+    const updateTodos = todos.map(t => t.id === todo.id ? {
+      ...t,
+      done: !t.done
+    } : t);
+    setTodos(updateTodos)
+  }
+  
   return (
     <ul>
-      {todos.map( todo => (
-        <li key={todo.id}>{todo.text}</li>
+      {todos.map(todo => (
+        <li
+        onClick={() => handleToggleTodo(todo)}
+        style={{
+          textDecoration: todo.done ? "line-through" : ""
+        }}
+        key={todo.id}>{todo.text}</li>
       ))}
     </ul>
   )
 }
 
 function AddToDo({setTodos}) {
+
+  const inputRef = React.useRef();
 
   function handleAddToDo(event) {
     event.preventDefault();
@@ -43,11 +59,12 @@ function AddToDo({setTodos}) {
     setTodos(prevTodos => {
       return prevTodos.concat(todo);
     });
+    inputRef.current.value = "";
   }
 
   return (
     <form onSubmit={handleAddToDo}>
-      <input name="addTodo" placeholder="Add Todo" />
+      <input name="addTodo" placeholder="Add Todo" ref ={inputRef} />
       <button type="submit">Submit</button>
     </form>
   )
